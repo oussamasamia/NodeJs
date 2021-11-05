@@ -14,7 +14,7 @@
         <div class="card">
           <img src="img/Prince.jpg" alt="MACKPAYEN Prince Divin" style="width: 100%;height : 900px" />
           <div class="container">
-            <h2>MACKPAYEN Prince DivinMACKPAYEN Prince Divin</h2>
+            <h2>MACKPAYEN Prince Divin</h2>
             <p class="title">Student</p>
             <p>Student developer</p>
             <p>divinmackpayen@gmail.com</p>
