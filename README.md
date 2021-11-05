@@ -1,4 +1,4 @@
-# Find to eat
+# FindToEat
 
 ## Introduction
 
