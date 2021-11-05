@@ -14,6 +14,7 @@ import VueRouter from 'vue-router'
 
 import ListOfRestaurants from './components/RestaurantsList.vue'
 import RestaurantsCard from './components/RestaurantsCard.vue'
+import About from './components/About.vue'
 
 
 
@@ -43,7 +44,11 @@ const router = new VueRouter({
     {
       path: '/card',
       component: RestaurantsCard,
-    }
+    }, 
+    {
+      path: '/about',
+      component: About,
+    },
   ],
   mode: 'history'
 });
