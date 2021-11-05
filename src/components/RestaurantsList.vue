@@ -7,18 +7,35 @@
 
     <DetailRestaurant ref="detailsRestaurantComponent" />
 
-    <h1>Nombre de restaurants : {{ nbrRestaurantsTotal }}</h1>
-    <h5>Nombre pages total : {{ nbPagesTotal }}</h5>
+    <div class="row">
+      <div class="col-6">
+        <h5>Nombre de restaurants : {{ nbrRestaurantsTotal }}</h5>
+      </div>
+      <div class="col-6">
+        <h5>Nombre pages total : {{ nbPagesTotal }}</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <label>Number restaurants to show : </label>
 
-    <label>Number restaurants to show : </label>
-    <input
-      @change="getRestaurantsFromServer()"
-      type="range"
-      min="1"
-      max="1000"
-      v-model="pageSize"
-    />{{ pageSize }}
-    <p>Page courante : {{ page }}</p>
+        <input
+          @change="getRestaurantsFromServer()"
+          type="range"
+          min="1"
+          max="1000"
+          v-model="pageSize"
+        />
+
+        {{ pageSize }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8"></div>
+      <div class="col-4">
+        <p>Page courante : {{ page }}</p>
+      </div>
+    </div>
 
     <md-table
       v-model="restaurants"
@@ -158,27 +175,31 @@ export default {
     chooseAddOrEdit(id) {
       //alert(id);
       this.$refs["CURestaurant"].id = id;
-      if(id != 0){
-      let url = "http://localhost:8080/api/restaurants/" + id;
+      if (id != 0) {
+        let url = "http://localhost:8080/api/restaurants/" + id;
 
-      fetch(url)
-        .then((responseJSON) => {
-          //arrow functions ,  conserve le bon "this"
-          //la reponse est en JSON , on l'a convertit avec la ligne suivante :
-          responseJSON.json().then((res) => {
-            // Maintenant res est un vrai objet JavaScript
+        fetch(url)
+          .then((responseJSON) => {
+            //arrow functions ,  conserve le bon "this"
+            //la reponse est en JSON , on l'a convertit avec la ligne suivante :
+            responseJSON.json().then((res) => {
+              // Maintenant res est un vrai objet JavaScript
               this.$refs["CURestaurant"].nom = res.restaurant.name;
               this.$refs["CURestaurant"].cuisine = res.restaurant.cuisine;
-              this.$refs["CURestaurant"].description = res.restaurant.description;
+              this.$refs["CURestaurant"].description =
+                res.restaurant.description;
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            console.log("error");
           });
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log("error");
-        });
-    }else{
-      this.$refs["CURestaurant"].nom = this.$refs["CURestaurant"].cuisine = this.$refs["CURestaurant"].description = "";
-    }
+      } else {
+        this.$refs["CURestaurant"].nom =
+          this.$refs["CURestaurant"].cuisine =
+          this.$refs["CURestaurant"].description =
+            "";
+      }
     },
     showAlert() {
       // Use sweetalert2
