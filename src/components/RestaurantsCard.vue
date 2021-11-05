@@ -1,37 +1,29 @@
 <template>
   <div>
-    <b-button v-b-modal.modal-restaurant @click="chooseAddOrEdit(0)"
-      >Create Restaurant</b-button
-    >
-    <CreateRestaurant ref="CURestaurant" />
+    <div>
+      <b-button v-b-modal.modal-restaurant @click="chooseAddOrEdit(0)"
+        >Create Restaurant</b-button
+      >
+      <CreateRestaurant ref="CURestaurant" />
 
-    <DetailRestaurant ref="detailsRestaurantComponent" />
+      <DetailRestaurant ref="detailsRestaurantComponent" />
 
-    <h1>Nombre de restaurants : {{ nbrRestaurantsTotal }}</h1>
-    <h5>Nombre pages total : {{ nbPagesTotal }}</h5>
+      <h1>Nombre de restaurants : {{ nbrRestaurantsTotal }}</h1>
+      <h5>Nombre pages total : {{ nbPagesTotal }}</h5>
 
-    <label>Number restaurants to show : </label>
-    <input
-      @change="getRestaurantsFromServer()"
-      type="range"
-      min="1"
-      max="1000"
-      v-model="pageSize"
-    />{{ pageSize }}
-    <p>Page courante : {{ page }}</p>
-
-    <md-table
-      v-model="restaurants"
-      md-sort="name"
-      md-sort-order="asc"
-      md-card
-      md-fixed-header
-    >
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Restaurants</h1>
-        </div>
-
+      <label>Number restaurants to show : </label>
+      <input
+        @change="getRestaurantsFromServer()"
+        type="range"
+        min="1"
+        max="1000"
+        v-model="pageSize"
+      />{{ pageSize }}
+      <p>Page courante : {{ page }}</p>
+    </div>
+    <div class="row">
+      <div class="col-8"></div>
+      <div class="col-4">
         <md-field md-clearable class="md-toolbar-section-end">
           <md-input
             placeholder="Search by name..."
@@ -40,73 +32,69 @@
             v-model="nameRestaurantToSearch"
           />
         </md-field>
-      </md-table-toolbar>
+      </div>
+    </div>
 
-      <md-table-empty-state
-        md-label="No restaurants found"
-        :md-description="`No restaurant found for this '${search}' query. Try a different search term or create a new restaurant.`"
-      >
-        <md-button class="md-primary md-raised"
-          >Create New Restaurant</md-button
-        >
-      </md-table-empty-state>
+    <div class="row">
+      <div class="col-3" v-for="(item, index) in restaurants" :key="index">
+        {{ (selectedImage = "") }}
+        <div class="card-expansion-rest">
+          <md-card>
+            <md-card-media>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD4h2IUYsabtXCuHT5-kKEqB7MCR82apkHBA&usqp=CAU" />
+            </md-card-media>
 
-      <md-table-row
-        slot="md-table-row"
-        slot-scope="{ item }"
-        @click="alert(item.name)"
-      >
-        <md-table-cell md-label="Name" md-sort-by="name">{{
-          item.name
-        }}</md-table-cell>
-        <md-table-cell md-label="Cuisine" md-sort-by="cuisine">{{
-          item.cuisine
-        }}</md-table-cell>
-        <md-table-cell md-label="Actions">
-          <md-button
-            class="md-fab md-mini md-primary"
-            @click="afficherRestaurant(item)"
-          >
-            <md-icon>info</md-icon>
-          </md-button>
+            <md-card-header>
+              <div class="md-title">{{ item.name }}</div>
+              <div class="md-subhead">{{ item.cuisine }}</div>
+            </md-card-header>
 
-          <md-button
-            v-b-modal.modal-restaurant
-            class="md-fab md-mini md-plain"
-            style="background-color: #4da404"
-            @click="chooseAddOrEdit(item._id)"
-          >
-            <md-icon>edit</md-icon>
-          </md-button>
+            <md-card-expand>
+              <md-card-actions md-alignment="space-between">
+                <div>
+                  <md-button
+                    class="md-fab md-mini md-primary"
+                    @click="afficherRestaurant(item)"
+                  >
+                    <md-icon>info</md-icon>
+                  </md-button>
+                  <md-button
+                    v-b-modal.modal-restaurant
+                    class="md-fab md-mini md-plain"
+                    style="background-color: #4da404"
+                    @click="chooseAddOrEdit(item._id)"
+                  >
+                    <md-icon>edit</md-icon>
+                  </md-button>
+                  <md-button
+                    class="md-fab md-mini md-plain"
+                    @click="supprimerRestaurant(item)"
+                  >
+                    <md-icon>delete</md-icon>
+                  </md-button>
+                </div>
 
-          <md-button
-            class="md-fab md-mini md-plain"
-            @click="supprimerRestaurant(item)"
-          >
-            <md-icon>delete</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+                <md-card-expand-trigger v-if="item.description">
+                  <md-button class="md-icon-button">
+                    <md-icon>keyboard_arrow_down</md-icon>
+                  </md-button>
+                </md-card-expand-trigger>
+              </md-card-actions>
 
-    <md-button
-      class="md-fab"
-      :disabled="page === 0"
-      @click="pagePrecedente()"
-      style="background-color: #81b5e9"
-    >
-      <label style="color: black">Prev</label>
-    </md-button>
-
-    <md-button
-      class="md-fab md-primary"
-      :disabled="page === nbPagesTotal"
-      @click="pageSuivante()"
-    >
-      <label style="color: black">Next</label>
-    </md-button>
+              <md-card-expand-content>
+                <md-card-content>
+                  {{item.description}}
+                </md-card-content>
+              </md-card-expand-content>
+            </md-card-expand>
+          </md-card>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+
 
 
 <script>
@@ -128,7 +116,7 @@ const searchByName = (items, term) => {
 };
 
 export default {
-  name: "ListOfRestaurants",
+  name: "RestaurantsCard",
   components: {
     CreateRestaurant,
     DetailRestaurant,
@@ -146,6 +134,11 @@ export default {
       restaurants: [],
       search: null,
       searched: [],
+      images: [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD4h2IUYsabtXCuHT5-kKEqB7MCR82apkHBA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSWkozcbxzLAUZShho5W0wSyhmHO1lQgTd8Q&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREdICAtOqLcCi5E3jWFZ7ih9PqHbcU-eUjUw&usqp=CAU",
+      ],
     };
   },
   mounted() {
@@ -155,30 +148,38 @@ export default {
     this.getRestaurantsFromServer();
   },
   methods: {
+    randomItem() {
+      //alert("hahah")
+      return this.images[Math.floor(Math.random() * this.images.length)];
+    },
     chooseAddOrEdit(id) {
       //alert(id);
       this.$refs["CURestaurant"].id = id;
-      if(id != 0){
-      let url = "http://localhost:8080/api/restaurants/" + id;
+      if (id != 0) {
+        let url = "http://localhost:8080/api/restaurants/" + id;
 
-      fetch(url)
-        .then((responseJSON) => {
-          //arrow functions ,  conserve le bon "this"
-          //la reponse est en JSON , on l'a convertit avec la ligne suivante :
-          responseJSON.json().then((res) => {
-            // Maintenant res est un vrai objet JavaScript
+        fetch(url)
+          .then((responseJSON) => {
+            //arrow functions ,  conserve le bon "this"
+            //la reponse est en JSON , on l'a convertit avec la ligne suivante :
+            responseJSON.json().then((res) => {
+              // Maintenant res est un vrai objet JavaScript
               this.$refs["CURestaurant"].nom = res.restaurant.name;
               this.$refs["CURestaurant"].cuisine = res.restaurant.cuisine;
-              this.$refs["CURestaurant"].description = res.restaurant.description;
+              this.$refs["CURestaurant"].description =
+                res.restaurant.description;
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            console.log("error");
           });
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log("error");
-        });
-    }else{
-      this.$refs["CURestaurant"].nom = this.$refs["CURestaurant"].cuisine = this.$refs["CURestaurant"].description = "";
-    }
+      } else {
+        this.$refs["CURestaurant"].nom =
+          this.$refs["CURestaurant"].cuisine =
+          this.$refs["CURestaurant"].description =
+            "";
+      }
     },
     showAlert() {
       // Use sweetalert2
@@ -339,4 +340,9 @@ export default {
 </script>
 
 <style>
+.card-expansion-rest {
+  height: 480px;
+}
+
+
 </style>

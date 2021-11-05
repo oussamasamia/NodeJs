@@ -1,19 +1,21 @@
 <template>
   <div id="app">
     <Tabs/>
-    <h1><ListOfRestaurants/></h1>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import ListOfRestaurants from './components/RestaurantsList.vue'
+//import ListOfRestaurants from './components/RestaurantsList.vue'
 import Tabs from './components/Tabs.vue'
+//import RestaurantsCard from './components/RestaurantsCard.vue'
 
 export default {
   name: 'App',
   components: {
-    ListOfRestaurants,
-    Tabs,
+   // ListOfRestaurants,
+  Tabs,
+   // RestaurantsCard,
   }
 }
 </script>
@@ -27,4 +29,6 @@ export default {
   color: #04315e;
   margin-top: 60px;
 }
+
+
 </style>  
